@@ -1,0 +1,46 @@
+<h1>Welcome @ViewBag.loggedIn.Name</h1>
+
+<table class="table table-striped">
+    <tr>
+        <th>Meet Up</th>
+        <th>Date and Time</th>
+        <th>Duration</th>
+        <th>Event Coordinator</th>
+        <th>No. of Participants</th>
+        <th>Action</th>
+    </tr>
+    @foreach(Meeting m in ViewBag.AllMeetings)
+    if(m.Date > DateTime.Now)
+    {
+        {
+        <tr>
+            <td><a href="/meeting/@m.MeetingId">@m.Title</a></td>
+            <td>@m.Date</td>
+            <td>@m.Duration @m.TimeType</td>
+            <td>@m.Coordinator.Name</td>
+            <td>@m.InvitesMade.Count</td>
+            <td>
+                @if(m.Coordinator.UserId == ViewBag.loggedIn.UserId)
+                {
+                    <a href="/meeting/delete/@m.MeetingId" class="btn btn-danger">Delete</a>
+                } else {
+                    @if(!m.InvitesMade.Exists(a => a.UserId == ViewBag.loggedIn.UserId))
+                    {
+                        <form action="/meeting/join/@m.MeetingId" method="post">
+                            <input type="hidden" name="navigation" value="dashboard">
+                            <input type="submit" value="Join" class="btn btn-success">
+                        </form>
+                    } else {
+                        <form action="/meeting/unjoin/@m.MeetingId" method="post">
+                            <input type="hidden" name="navigation" value="dashboard">
+                            <input type="submit" value="Leave" class="btn btn-info">
+                        </form>
+                    }
+                }
+            </td>
+        </tr>
+    }
+}
+</table>
+
+<a href="/meeting/add" class="btn btn-info">Add New Activity</a>

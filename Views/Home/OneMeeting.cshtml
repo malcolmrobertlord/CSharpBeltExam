@@ -1,0 +1,34 @@
+<h1>@ViewBag.Meeting.Title</h1>
+
+@if(ViewBag.Meeting.UserId == ViewBag.User)
+{
+    <a href="/meeting/delete/@ViewBag.Meeting.MeetingId" class="btn btn-danger">Delete</a>
+} else {
+        @if(!ViewBag.Attending)
+        {
+            <form action="/meeting/join/@ViewBag.Meeting.MeetingId" method="post">
+                <input type="hidden" name="navigation" value="onemeeting">
+                <input type="submit" value="Join" class="btn btn-success">
+            </form>
+        } else {
+            <form action="/meeting/unjoin/@ViewBag.Meeting.MeetingId" method="post">
+                <input type="hidden" name="navigation" value="onemeeting">
+                <input type="submit" value="Leave" class="btn btn-info">
+            </form>
+        }
+}
+
+<h3>Event Coordinator: @ViewBag.Meeting.Coordinator.Name</h3>
+<h3>Description:</h3>
+<h5>@ViewBag.Meeting.Description</h5>
+
+<h3>Participants:</h3>
+<ul>
+@foreach(Invite p in ViewBag.Meeting.InvitesMade)
+{
+    <li>@p.Participant.Name</li>
+}
+</ul>
+
+
+
